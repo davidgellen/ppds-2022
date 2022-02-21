@@ -2,7 +2,7 @@
 
 Assignment focuses on basics of parallel programming using module fei.ppds and matplotlib for visual interpretation via histograms. This implementation is a modification of source code presented on lecture Paralel programming and distributed systems from 16/02/2022.
 
-##Task:
+## Task:
 
 Implement 2 threads which use the same index pointing to shared array of given size. Each thread increments element of the array pointed at by the index and increases the index itself. Once the index points out of bounds of the array, thread stops it' s execution.
 
@@ -34,7 +34,7 @@ Note: we read as follows (value: amount of elements in an array with value)
 ```
 
 
-###1st alternative:
+### 1st alternative:
 
 If index does not point outside the array, current thread locks the lock, therefore other thread is unable to change
 neither the array nor the index. Once the thread that locked the lock increments index value and the corresponding 
@@ -57,7 +57,7 @@ condition to check the index after locking
 
 File: week1_1.py
 
-####Results
+#### Results
 Size = 1000, no exception
 ```
 [(1, 1000)]
@@ -71,7 +71,7 @@ Size = 100000000, no exception
 [(1, 100000000)]
 ```
 
-###2nd alternative:
+### 2nd alternative:
 
 We lock the lock before iterating through the array and unlock it only after every element and the index have been incremented to expected values.
 This way we achieve that the thread responsible for locking the lock iterates through the array alone. This kind of implementation is useful f.e. if we 
@@ -88,7 +88,7 @@ def do_count(shared_obj, mutex_obj):
 
 File: week1_2.py
 
-####Results
+#### Results
 Size = 1000, no exception
 ```
 [(1, 1000)]
