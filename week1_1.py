@@ -11,6 +11,12 @@ class Shared:
 
 
 def do_count(shared_obj, mutex_obj):
+    """
+    locking and unlocking the mutex in each iteration of Shared
+    :param shared_obj: object of class Shared
+    :param mutex_obj: initialized mutex lock
+    :return:
+    """
     while shared_obj.counter < shared_obj.end:
         mutex_obj.lock()
         # last expected iteration tries to access element out of bounds resulting in exception, therefore we check
