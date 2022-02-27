@@ -10,7 +10,7 @@ class Adt:
     def __init__(self, n):
         self.n = n
         self.sync_tool = [Event() for _ in range(n)]  # shallow copy of Event(), deep copy would signal everything
-        # self.sync_tool = [Semaphore(0) for i in range(n + 1)]  # works with Semaphore too
+        # self.sync_tool = [Semaphore(0) for i in range(n)]  # works with Semaphore too
         self.sync_tool[0].signal()  # signals for first number
 
     """
