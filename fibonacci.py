@@ -9,7 +9,7 @@ class Adt:
     """
     def __init__(self, n):
         self.n = n
-        self.sync_tool = [Event() for _ in range(n + 1)]  # shallow copy of Event(), deep copy would signal everything
+        self.sync_tool = [Event() for _ in range(n)]  # shallow copy of Event(), deep copy would signal everything
         # self.sync_tool = [Semaphore(0) for i in range(n + 1)]  # works with Semaphore too
         self.sync_tool[0].signal()  # signals for first number
 
@@ -19,7 +19,10 @@ class Adt:
     """
     def wait(self, i):
         self.sync_tool[i].wait()
-        self.sync_tool[i + 1].signal()
+        try:  # for last Thread in list
+            self.sync_tool[i + 1].signal()
+        except:
+            print("finished")
 
 
 def compute_fibonacci(adt_obj, i):
@@ -28,10 +31,10 @@ def compute_fibonacci(adt_obj, i):
     fib_seq[i + 2] = fib_seq[i] + fib_seq[i + 1]
 
 
-THREADS = 20
+THREADS = 10
 fib_seq = [0] * (THREADS + 2)
 fib_seq[1] = 1
-adt = Adt(THREADS)
+adt = Adt(10)
 
 threads = [Thread(compute_fibonacci, adt, i) for i in range(THREADS)]
 [t.join() for t in threads]
