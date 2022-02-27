@@ -16,6 +16,7 @@ class Adt:
     """
     Method waits for semaphore signalisation and signals for next thread's semaphore 
     (first one signaling in constructor)
+    :i : id/index of current thread
     """
     def wait(self, i):
         self.sync_tool[i].wait()
@@ -26,6 +27,12 @@ class Adt:
 
 
 def compute_fibonacci(adt_obj, i):
+    """
+    Computes the value for fibonacci sequence for index i + 2
+    :param adt_obj: synchronization object
+    :param i: index
+    :return:
+    """
     sleep(randint(1, 10) / 10)  # for visual purposes
     adt_obj.wait(i)
     fib_seq[i + 2] = fib_seq[i] + fib_seq[i + 1]

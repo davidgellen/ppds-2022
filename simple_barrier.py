@@ -35,6 +35,12 @@ class SimpleBarrier:
 
 
 def barrier_example(barrier, thread_id):
+    """
+    Test method for barrier's wait function
+    :param barrier: barrier
+    :param thread_id: current thread's id
+    :return:
+    """
     print("thread %d before barrier" % thread_id)
     barrier.wait()
     print("thread %d after barrier" % thread_id)
