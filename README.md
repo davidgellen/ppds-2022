@@ -88,7 +88,9 @@ be in ascending order and after the barrier in descending order - threads would 
 
 ## Task 2:
 
-Implement a reusable barrier.
+Implement a reusable barrier with Event (same principle as Task 1).
+
+Our implementation from Task 1 works directly with Task 2, so class SimpleBarrier is unchanged. The implementation was tested on function provided on the webpage.
 
 File: reusable_barrier.py
 
