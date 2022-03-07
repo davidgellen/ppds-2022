@@ -2,6 +2,7 @@
 Module representing second task in week 3 from course Paralel programming and distributed systems
 """
 
+import time
 from fei.ppds import Thread, Mutex, Semaphore, print
 from time import sleep
 from random import randint
@@ -37,42 +38,73 @@ class Shared:
         self.finished = False
         self.mutex = Mutex()
         self.free = Semaphore(buffer_size)
+        self.total_added = 0
+        self.total_taken = 0
 
 
-def producer(shared_obj):
+def producer(shared_obj, production_time_):
+    """
+    Function representing producer thread
+    """
     while True:
-        sleep(randint(1, 10)/10)  # producing item (even when buffer is full)
-        print("P")
+        sleep(randint(1, 10) / production_time_)  # producing item (even when buffer is full)
+        # print("P")
         shared_obj.free.wait()
         if shared_obj.finished:
             break
         shared_obj.mutex.lock()
-        sleep(randint(1, 10)/10)  # adding item
+        sleep(randint(1, 10) / production_time_)  # adding item
+        shared_obj.total_added = shared_obj.total_added + 1
         shared_obj.mutex.unlock()
         shared_obj.items.signal()
 
 
-def consumer(shared_obj):
+def consumer(shared_obj, consumption_time_):
+    """
+    Function representing consumer thread
+    """
     while True:
         shared_obj.items.wait()
         if shared_obj.finished:
             break
         shared_obj.mutex.lock()
-        sleep(randint(1, 10)/10)  # taking item
+        sleep(randint(1, 10) / consumption_time_)  # taking item
+        shared_obj.total_taken = shared_obj.total_taken + 1
         shared_obj.mutex.unlock()
         shared_obj.free.signal()
-        print("C")
-        sleep(randint(1, 10)/10)  # processing item
+        # print("C")
+        sleep(randint(1, 10) / consumption_time_)  # processing item
 
 
-for i in range(10):
-    shared = Shared(10)
-    consumers = [Thread(consumer, shared) for _ in range(2)]
-    producers = [Thread(producer, shared) for _ in range(5)]
-    sleep(5)
-    shared.finished = True
-    print(f"main thread {i} waiting for the end")
-    shared.items.signal(40)
-    shared.free.signal(40)
-    [t.join() for t in consumers+producers]
-    print(f"main thread {i} ended")
+production_times = [1]
+consumption_times = [100, 10]
+producers_count = [5]
+consumers_count = [5]
+storages = [50]
+
+for production_time in production_times:
+    for consumption_time in consumption_times:
+        for producer_count in producers_count:
+            for consumer_count in consumers_count:
+                for storage in storages:
+                    total_added_in_iteration = 0
+                    total_taken_in_iteration = 0
+                    for i in range(10):
+                        start_time = round(time.time() * 1000)
+                        shared = Shared(storage)
+                        consumers = [Thread(consumer, shared, consumption_time) for _ in range(consumer_count)]
+                        producers = [Thread(producer, shared, production_time) for _ in range(producer_count)]
+                        sleep(3)
+                        shared.finished = True
+                        # print(f"main thread waiting for the end")
+                        shared.items.signal(storage * 10)
+                        shared.free.signal(storage * 10)
+                        [t.join() for t in consumers + producers]
+                        # print(f"main thread ended")
+                        total_added_in_iteration = total_added_in_iteration + shared.total_added
+                        total_taken_in_iteration = total_taken_in_iteration + shared.total_taken
+                    avg_total_added = total_added_in_iteration / 10
+                    avg_total_taken = total_taken_in_iteration / 10
+                    print(production_time, consumption_time, producer_count, consumer_count, storage)
+                    print("avg added:", avg_total_added)
+                    print("avg taken:", avg_total_taken)
