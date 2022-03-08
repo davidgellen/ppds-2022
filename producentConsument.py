@@ -76,12 +76,14 @@ def consumer(shared_obj, consumption_time_):
         sleep(randint(1, 10) / consumption_time_)  # processing item
 
 
-production_times = [1]
-consumption_times = [100, 10]
-producers_count = [5]
-consumers_count = [5]
-storages = [50]
+production_times = [10, 100]
+consumption_times = [10, 100]
+producers_count = [5, 50, 500]
+consumers_count = [5, 50, 500]
+storages = [100, 1000, 1000]
 
+print("production_time", "consumption_time", "producer_count", "consumer_count", "storage", "time", "avg_added",
+      "avg_produced")
 for production_time in production_times:
     for consumption_time in consumption_times:
         for producer_count in producers_count:
@@ -89,22 +91,29 @@ for production_time in production_times:
                 for storage in storages:
                     total_added_in_iteration = 0
                     total_taken_in_iteration = 0
+                    total_time_in_duration = 0
                     for i in range(10):
-                        start_time = round(time.time() * 1000)
+                        start_time = time.time()
                         shared = Shared(storage)
                         consumers = [Thread(consumer, shared, consumption_time) for _ in range(consumer_count)]
                         producers = [Thread(producer, shared, production_time) for _ in range(producer_count)]
-                        sleep(3)
+                        sleep(1.5)
                         shared.finished = True
                         # print(f"main thread waiting for the end")
                         shared.items.signal(storage * 10)
                         shared.free.signal(storage * 10)
                         [t.join() for t in consumers + producers]
                         # print(f"main thread ended")
+                        end_time = time.time()
+                        time_difference = end_time - start_time
+                        total_time_in_duration = total_time_in_duration + time_difference
                         total_added_in_iteration = total_added_in_iteration + shared.total_added
                         total_taken_in_iteration = total_taken_in_iteration + shared.total_taken
+                        # print("iteration done")
                     avg_total_added = total_added_in_iteration / 10
                     avg_total_taken = total_taken_in_iteration / 10
-                    print(production_time, consumption_time, producer_count, consumer_count, storage)
-                    print("avg added:", avg_total_added)
-                    print("avg taken:", avg_total_taken)
+                    avg_total_time = total_time_in_duration / 10
+                    print(production_time, consumption_time, producer_count, consumer_count, storage, avg_total_time,
+                          avg_total_added, avg_total_taken)
+                    # print("avg added:", avg_total_added)
+                    # print("avg taken:", avg_total_taken)
