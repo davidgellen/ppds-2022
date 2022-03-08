@@ -97,7 +97,7 @@ for production_time in production_times:
                         shared = Shared(storage)
                         consumers = [Thread(consumer, shared, consumption_time) for _ in range(consumer_count)]
                         producers = [Thread(producer, shared, production_time) for _ in range(producer_count)]
-                        sleep(1.5)
+                        sleep(5)
                         shared.finished = True
                         # print(f"main thread waiting for the end")
                         shared.items.signal(storage * 10)
