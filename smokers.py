@@ -1,3 +1,9 @@
+"""
+Assignment smokers, week 5
+Author: David Gellen
+User resources: https://www.youtube.com/watch?v=iotYZJzxKf4
+"""
+
 from random import randint
 from fei.ppds import Mutex, Semaphore, Thread, print
 from time import sleep
