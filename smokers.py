@@ -1,7 +1,7 @@
 """
 Assignment smokers, week 5
 Author: David Gellen
-User resources: https://www.youtube.com/watch?v=iotYZJzxKf4
+Used resources: https://www.youtube.com/watch?v=iotYZJzxKf4
 """
 
 from random import randint
