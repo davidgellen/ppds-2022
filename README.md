@@ -1,8 +1,8 @@
-# Week 4
+# Week 5
 
 The implementation is a modification of source code from lecture's webpage https://uim.fei.stuba.sk/i-ppds/5-cvicenie-problem-fajciarov-problem-divochov-%f0%9f%9a%ac/ and lecture https://www.youtube.com/watch?v=iotYZJzxKf4
 
-## Task1: Smokers
+## Task 1: Smokers
 
 There are 3 smokers, 3 ingredients to make a cigarette - tobacco, match or paper, and agent providing these ingredients. Every smoker has an infinite amount of 1 resource. As agent provides resources, if smoker is able to make a cigarette, he takes the 2 resources he doesn't have an infinite supply and makes one.
 
