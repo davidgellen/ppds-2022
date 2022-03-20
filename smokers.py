@@ -168,14 +168,19 @@ def dealer_match(shared):
                     shared.has_paper -= 1
                     shared.dealer_tobacco.signal()
 
-            if shared.has_tobacco > shared.has_paper:
+            elif shared.has_tobacco > shared.has_paper:
                 shared.has_tobacco -= 1
                 shared.dealer_paper.signal()
             else:
                 shared.has_paper -= 1
                 shared.dealer_tobacco.signal()
-
-        else:
+        elif shared.has_tobacco > 0 and shared.has_paper == 0:
+            shared.has_tobacco -= 1
+            shared.dealer_paper.signal()
+        elif shared.has_tobacco == 0 and shared.has_paper > 0:
+            shared.has_paper -= 1
+            shared.dealer_tobacco.signal()
+        elif shared.has_tobacco == 0 and shared.has_paper == 0:
             shared.has_match += 1
         print(f"RESOURCES: paper {shared.has_paper}, tobacco {shared.has_tobacco}, matches {shared.has_match}")
         shared.mutex.unlock()
@@ -222,14 +227,18 @@ def dealer_paper(shared):
                 else:
                     shared.has_match -= 1
                     shared.dealer_tobacco.signal()
-
-            if shared.has_tobacco > shared.has_match:
+            elif shared.has_tobacco > shared.has_match:
                 shared.has_tobacco -= 1
                 shared.dealer_match.signal()
             else:
                 shared.has_match -= 1
                 shared.dealer_tobacco.signal()
-
+        elif shared.has_tobacco > 0 and shared.has_match == 0:
+            shared.has_tobacco -= 1
+            shared.dealer_match.signal()
+        elif shared.has_tobacco == 0 and shared.has_match > 0:
+            shared.has_match -= 1
+            shared.dealer_tobacco.signal()
         else:
             shared.has_paper += 1
         print(f"RESOURCES: paper {shared.has_paper}, tobacco {shared.has_tobacco}, matches {shared.has_match}")
@@ -278,13 +287,18 @@ def dealer_tobacco(shared):
                     shared.has_match -= 1
                     shared.dealer_paper.signal()
 
-            if shared.has_paper > shared.has_match:
+            elif shared.has_paper > shared.has_match:
                 shared.has_paper -= 1
                 shared.dealer_match.signal()
             else:
                 shared.has_match -= 1
                 shared.dealer_paper.signal()
-
+        elif shared.has_paper > 0 and shared.has_match == 0:
+            shared.has_paper -= 1
+            shared.dealer_match.signal()
+        elif shared.has_paper == 0 and shared.has_match > 0:
+            shared.has_match -= 1
+            shared.dealer_paper.signal()
         else:
             shared.has_tobacco += 1
         print(f"RESOURCES: paper {shared.has_paper}, tobacco {shared.has_tobacco}, matches {shared.has_match}")
@@ -297,7 +311,7 @@ def run():
     """
     shared = Shared()
     agents = [Thread(agent_1, shared), Thread(agent_2, shared), Thread(agent_3, shared)]
-    dealers = [Thread(dealer_match_old, shared), Thread(dealer_paper_old, shared), Thread(dealer_tobacco_old, shared)]
+    dealers = [Thread(dealer_match, shared), Thread(dealer_paper, shared), Thread(dealer_tobacco, shared)]
     smokers = [Thread(smoker_match, shared), Thread(smoker_tobacco, shared), Thread(smoker_paper, shared)]
 
     for t in smokers + agents + dealers:
