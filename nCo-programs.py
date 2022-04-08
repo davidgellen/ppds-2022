@@ -1,5 +1,5 @@
 """
-Lecture 7 assignment https://uim.fei.stuba.sk/i-ppds/7-cvicenie/
+Lecture 7 assignment https://uim.fei.stuba.sk/i-ppds/7-cvicenie/ by Mgr. Ing. Matúš Jókay, PhD.
 Author: David Gellen
 License: GPL-3.0
 """
